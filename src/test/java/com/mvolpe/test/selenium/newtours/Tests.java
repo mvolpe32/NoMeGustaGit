@@ -54,7 +54,7 @@ public class Tests {
 
         //Selecciono fecha de ida
 
-        //Abro panel
+        //Abro panel - Cambio 1
         driver.findElement(By.cssSelector(".sbox-bind-event-click-start-date")).click();
 
         //Espero que se despliegue el calendario
