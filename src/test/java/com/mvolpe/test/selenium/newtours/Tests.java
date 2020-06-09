@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -22,11 +23,11 @@ public class Tests {
         driver = new ChromeDriver();
         driver.get("http://www.despegar.com.ar/");
         driver.manage().window().maximize();
-
     }
 
     @Test
     public void test1() throws InterruptedException {
+
         String[][] tabSelection2 = {{"Alojamiento",".HOTELS","Alojamiento"},{"Vuelos",".FLIGHTS","Vuelos"},{"Paquetes",".PACKAGES","Paquetes turísticos"}};
 
 
