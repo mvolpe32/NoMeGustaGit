@@ -19,14 +19,15 @@ public class Tests {
 
     @Before
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "Drivers/chromedriver.exe");
-        driver = new ChromeDriver();
+        driver = DriverFactory.get("chrome");
         driver.get("http://www.despegar.com.ar/");
         driver.manage().window().maximize();
     }
 
     @Test
     public void test1() throws InterruptedException {
+
+
 
         String[][] tabSelection2 = {{"Alojamiento",".HOTELS","Alojamiento"},{"Vuelos",".FLIGHTS","Vuelos"},{"Paquetes",".PACKAGES","Paquetes turísticos"}};
 
@@ -85,7 +86,11 @@ public class Tests {
                 "-panel--popup _pnlpk-panel--mobile _pnlpk-panel--show']")));
         //Agrego 2 adultos
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-itemRow:first-of-type .sbox-3-icon-plus")).click();
+
+
+
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-itemRow:first-of-type .sbox-3-icon-plus")).click();
+
         //Agrego 2 menores
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-itemRow:nth-of-type(2) .sbox-3-icon-plus")).click();
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-itemRow:nth-of-type(2) .sbox-3-icon-plus")).click();
