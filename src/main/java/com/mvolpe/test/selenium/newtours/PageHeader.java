@@ -14,12 +14,12 @@ public class PageHeader extends PageObject{
         super(driver);
     }
 
-    public PageObject selectTab(String tab){
+    public FlightsHomePage selectTab(String tab){
         if (tab.equals("flights")){
             flightsTab.click();
             return new FlightsHomePage(driver);
         }else{
-            return new HotelsHomePage(driver);
+            return new FlightsHomePage(driver);
         }
     }
 }
