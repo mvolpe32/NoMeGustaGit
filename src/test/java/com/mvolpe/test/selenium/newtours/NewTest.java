@@ -27,18 +27,17 @@ public class NewTest {
     @Test
     public void test1() throws InterruptedException {
 
-        Thread.sleep(2000);
 
         HomePage homePage = new HomePage(driver);
-        FlightsHomePage vuelosHome = homePage.header.selectTab("flights");
-
-        vuelosHome.searchForm.cargaCiudad("origen","Brasil","Brasilia, Distrito Federal, Brasil");
-        vuelosHome.searchForm.cargaCiudad("destino","Londres","Londres, Inglaterra, Reino Unido");
+        FlightsHomePage flightsHome = (FlightsHomePage)homePage.header.selectTab("flights");
+        //HotelsHomePage hotelsHome = (HotelsHomePage)homePage.header.selectTab("hotels");
+        flightsHome.searchForm.cargaCiudad("origen","Brasil","Brasilia, Distrito Federal, Brasil");
+        flightsHome.searchForm.cargaCiudad("destino","Londres","Londres, Inglaterra, Reino Unido");
         Thread.sleep(3000);
 
         //FECHAS - CALENDARIO
 
-        vuelosHome.searchForm.adultosMenores();
+        flightsHome.searchForm.adultosMenores();
         Thread.sleep(2000);
 
     }

@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class HotelsSearchForm {
+public class HotelsSearchForm extends PageObject{
     @FindBy(css = ".sbox-places-origin .input-container .input-tag")
     private WebElement destino;
 
@@ -17,10 +17,10 @@ public class HotelsSearchForm {
         super(driver);
     }
 
-    public void cargaDestino(String destinoElegido){
-        destino.sendKeys("Brasil");
-
-        Thread.sleep(2000);
-    }
+//    public void cargaDestino(String destinoElegido){
+//        destino.sendKeys("Brasil");
+//
+//        Thread.sleep(2000);
+//    }
 
 }
