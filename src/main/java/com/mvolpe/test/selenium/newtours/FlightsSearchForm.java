@@ -25,14 +25,15 @@ public class FlightsSearchForm extends PageObject{
     @FindBy(css = ".sbox-destination-container .input-container .input-tag")
     private WebElement DESTINO;
     //private static final String DESTINO = "input[class='input-tag sbox-main-focus sbox-bind-reference-flight-roundtrip-" + "destination-input " + "sbox-secondary sbox-places-second places-inline'][placeholder='Ingresá hacia dónde viajas']";
-    @FindBy(css = "sbox-bind-event-click-start-date")
+    @FindBy(css = ".sbox-dates-row .sbox-datein-container .sbox-bind-event-click-start-date")
     private WebElement fechaIda;
-    @FindBy(css = "sbox-bind-event-click-start-date")
-    private WebElement fechaVuelta;
     @FindBy(css = "._dpmg2--month-active")
     private WebElement activeMonth;
     @FindBy(css = "._dpmg2--controls-next")
     private WebElement nextArrow;
+    @FindBy(css = "._dpmg2--month-active ._dpmg2--today")
+    private WebElement dateToday;
+
 
     String[] listaCiudades = {"Brasilia, Distrito Federal, Brasil","Rio de Janeiro, Rio de Janeiro, Brasil","Londres, " +
             "Inglaterra, Reino Unido","Mánchester, Inglaterra, Reino Unido"};
@@ -62,9 +63,16 @@ public class FlightsSearchForm extends PageObject{
         }
     }
 
-//    public void cargaFecha(String anoMes, String dia){
-//        String mesActivo;
-//        fechaIda.click();
+    public void cargaFecha(String anoMes, String dia){
+        fechaIda.click();
+        nextArrow.click();
+        nextArrow.click();
+        //dateToday.click();
+        //WebElement diaElegido = driver.findElement(By.xpath("//span[contains(@class,'_dpmg2--month-active')][contains(.,'" + dia + "')]"));
+        WebElement diaElegido = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ dia + "')]"));
+        //span[contains(text(),'someText')]/ancestor::div[contains(@class, 'measure-tab')]
+      //  \\span[contains(@class,'clase')][contains(.,'texto')]
+        diaElegido.click();
 //        mesActivo = activeMonth.getAttribute("data-month");
 //        //WebElement currentMonth = driver.findElement(By.cssSelector("._dpmg2--show ._dpmg2--month-active"));
 //        //String currentDataMonth = currentMonth.getAttribute("data-month");
@@ -72,8 +80,8 @@ public class FlightsSearchForm extends PageObject{
 //        //es el mes de parametro el activo? entonces click en siguiente
 //        if (mesActivo.equals(anoMes)){
 //            driver.findElements(By.cssSelector("._dpmg2--month-active ._dpmg2--dates ._dpmg2--date")).get(dia).click();
-//        }
-//    }
+        }
+
     //estructura ._dpmg2--month-active ._dpmg2--dates
     //formato YYYY-MM-DD          clase yearmonth;
 
@@ -105,4 +113,3 @@ public class FlightsSearchForm extends PageObject{
 
 
 }
-
