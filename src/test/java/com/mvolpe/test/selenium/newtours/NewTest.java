@@ -36,7 +36,7 @@ public class NewTest {
         Thread.sleep(2000);
 
         //FECHAS - CALENDARIO
-        flightsHome.searchForm.cargaFecha("2020-07","28");
+        flightsHome.searchForm.cargaFecha("2020-10","16","2020-11","20");
         Thread.sleep(2000);
         flightsHome.searchForm.adultosMenores();
         Thread.sleep(2000);

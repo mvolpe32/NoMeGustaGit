@@ -1,5 +1,6 @@
 package com.mvolpe.test.selenium.newtours;
 
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,11 +8,13 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.openqa.selenium.WebDriverException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.YearMonth;
 import java.util.Date;
+
+import static java.lang.Thread.*;
 
 public class FlightsSearchForm extends PageObject{
     public FlightsSearchForm(WebDriver driver){
@@ -63,23 +66,25 @@ public class FlightsSearchForm extends PageObject{
         }
     }
 
-    public void cargaFecha(String anoMes, String dia){
+    public void cargaFecha(String anoMesIda, String diaIda, String anoMesVuelta, String diaVuelta){
         fechaIda.click();
-        nextArrow.click();
-        nextArrow.click();
-        //dateToday.click();
-        //WebElement diaElegido = driver.findElement(By.xpath("//span[contains(@class,'_dpmg2--month-active')][contains(.,'" + dia + "')]"));
-        WebElement diaElegido = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ dia + "')]"));
-        //span[contains(text(),'someText')]/ancestor::div[contains(@class, 'measure-tab')]
-      //  \\span[contains(@class,'clase')][contains(.,'texto')]
-        diaElegido.click();
-//        mesActivo = activeMonth.getAttribute("data-month");
-//        //WebElement currentMonth = driver.findElement(By.cssSelector("._dpmg2--show ._dpmg2--month-active"));
-//        //String currentDataMonth = currentMonth.getAttribute("data-month");
-//        YearMonth date1 = YearMonth.parse(anoMes);
-//        //es el mes de parametro el activo? entonces click en siguiente
-//        if (mesActivo.equals(anoMes)){
-//            driver.findElements(By.cssSelector("._dpmg2--month-active ._dpmg2--dates ._dpmg2--date")).get(dia).click();
+        String dataMonthActiveMonth = activeMonth.getAttribute("data-month");
+        while(!dataMonthActiveMonth.equals(anoMesIda)){
+            nextArrow.click();
+            dataMonthActiveMonth = activeMonth.getAttribute("data-month");
+        }
+        WebElement diaElegidoIda = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaIda + "')]"));
+        diaElegidoIda.click();
+        //driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'18')]")).click();
+
+//        while(!dataMonthActiveMonth.equals(anoMesVuelta)){
+//            nextArrow.click();
+//            dataMonthActiveMonth = activeMonth.getAttribute("data-month");
+//        }
+//        WebElement diaElegidoVuelta = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaVuelta + "')]"));
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(1000L));
+//        wait.until(ExpectedConditions.elementToBeClickable(diaElegidoVuelta));
+//        diaElegidoVuelta.click();
         }
 
     //estructura ._dpmg2--month-active ._dpmg2--dates
@@ -98,14 +103,14 @@ public class FlightsSearchForm extends PageObject{
         //Agrego 2 menores
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-itemRow:nth-of-type(2) .sbox-3-icon-plus")).click();
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-itemRow:nth-of-type(2) .sbox-3-icon-plus")).click();
-        Thread.sleep(500);
+        sleep(500);
         driver.findElements(By.cssSelector("._pnlpk-select-minor-age")).get(35).click();
-        Thread.sleep(500);
+        sleep(500);
         driver.findElements(By.cssSelector("._pnlpk-select-minor-age .select-tag option[value='6']")).get(35).click();
-        Thread.sleep(500);
+        sleep(500);
         //Selecciono edad del menor
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-minor-age-select-last-item ._pnlpk-select-minor-age")).click();
-        Thread.sleep(100);
+        sleep(100);
         driver.findElement(By.cssSelector("._pnlpk-panel--show ._pnlpk-minor-age-select-last-item ._pnlpk-select-minor-age .select-tag option[value='4']")).click();
 
 
