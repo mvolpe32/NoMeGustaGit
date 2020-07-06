@@ -33,13 +33,10 @@ public class NewTest {
         //HotelsHomePage hotelsHome = (HotelsHomePage)homePage.header.selectTab("hotels");
         flightsHome.searchForm.cargaCiudad("origen","Brasil","Brasilia, Distrito Federal, Brasil");
         flightsHome.searchForm.cargaCiudad("destino","Londres","Londres, Inglaterra, Reino Unido");
-        Thread.sleep(2000);
 
         //FECHAS - CALENDARIO
         flightsHome.searchForm.cargaFecha("2020-10","16","2020-11","20");
-        Thread.sleep(2000);
         flightsHome.searchForm.adultosMenores();
-        Thread.sleep(2000);
 
     }
 

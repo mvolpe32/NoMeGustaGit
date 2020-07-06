@@ -27,15 +27,12 @@ public class FlightsSearchForm extends PageObject{
     private WebElement ORIGEN;
     @FindBy(css = ".sbox-destination-container .input-container .input-tag")
     private WebElement DESTINO;
-    //private static final String DESTINO = "input[class='input-tag sbox-main-focus sbox-bind-reference-flight-roundtrip-" + "destination-input " + "sbox-secondary sbox-places-second places-inline'][placeholder='Ingresá hacia dónde viajas']";
     @FindBy(css = ".sbox-dates-row .sbox-datein-container .sbox-bind-event-click-start-date")
     private WebElement fechaIda;
     @FindBy(css = "._dpmg2--month-active")
     private WebElement activeMonth;
     @FindBy(css = "._dpmg2--controls-next")
     private WebElement nextArrow;
-    @FindBy(css = "._dpmg2--month-active ._dpmg2--today")
-    private WebElement dateToday;
 
 
     String[] listaCiudades = {"Brasilia, Distrito Federal, Brasil","Rio de Janeiro, Rio de Janeiro, Brasil","Londres, " +
@@ -46,7 +43,7 @@ public class FlightsSearchForm extends PageObject{
     String ciudadAeropuerto;
 
 
-    public void cargaCiudad(String origenDestino, String ciudad, String ciudadLiteral) {
+    public void cargaCiudad (String origenDestino, String ciudad, String ciudadLiteral) {
         //Ingreso sugerencia
         if (origenDestino.equals("origen")) {
             ORIGEN.clear();
@@ -63,8 +60,14 @@ public class FlightsSearchForm extends PageObject{
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(3000L));
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(.,'Ciudades')]")));
             driver.findElement(By.xpath("//span[contains(.,'" + ciudadLiteral + "')]")).click();
+
         }
     }
+
+    public void cargaFechaRelativa(){
+
+    }
+
 
     public void cargaFecha(String anoMesIda, String diaIda, String anoMesVuelta, String diaVuelta){
         fechaIda.click();
@@ -73,18 +76,18 @@ public class FlightsSearchForm extends PageObject{
             nextArrow.click();
             dataMonthActiveMonth = activeMonth.getAttribute("data-month");
         }
-        WebElement diaElegidoIda = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaIda + "')]"));
+        WebElement diaElegidoIda = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaIda + "')][contains(@class,'_dpmg2--date-number')]"));
         diaElegidoIda.click();
-        //driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'18')]")).click();
+       // driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'" + diaVuelta + "')]")).click();
 
-//        while(!dataMonthActiveMonth.equals(anoMesVuelta)){
-//            nextArrow.click();
-//            dataMonthActiveMonth = activeMonth.getAttribute("data-month");
-//        }
-//        WebElement diaElegidoVuelta = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaVuelta + "')]"));
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(1000L));
-//        wait.until(ExpectedConditions.elementToBeClickable(diaElegidoVuelta));
-//        diaElegidoVuelta.click();
+        while(!dataMonthActiveMonth.equals(anoMesVuelta)){
+            nextArrow.click();
+           dataMonthActiveMonth = activeMonth.getAttribute("data-month");
+       }
+       WebElement diaElegidoVuelta = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaVuelta + "')][contains(@class,'_dpmg2--date-number')]"));
+        System.out.println(dataMonthActiveMonth);
+        System.out.println(diaElegidoVuelta.getText());
+       diaElegidoVuelta.click();
         }
 
     //estructura ._dpmg2--month-active ._dpmg2--dates
