@@ -1,6 +1,5 @@
 package com.mvolpe.test.selenium.newtours;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,10 +8,15 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriverException;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.YearMonth;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 import static java.lang.Thread.*;
 
@@ -31,8 +35,13 @@ public class FlightsSearchForm extends PageObject{
     private WebElement fechaIda;
     @FindBy(css = "._dpmg2--month-active")
     private WebElement activeMonth;
+    @FindBy (css = "._dpmg2--month-active ._dpmg2--date-number")
+    private List<WebElement> currentMonthDays;
+    @FindBy(css = "._dpmg2--today")
+    private WebElement todayDate;
     @FindBy(css = "._dpmg2--controls-next")
     private WebElement nextArrow;
+
 
 
     String[] listaCiudades = {"Brasilia, Distrito Federal, Brasil","Rio de Janeiro, Rio de Janeiro, Brasil","Londres, " +
@@ -64,34 +73,69 @@ public class FlightsSearchForm extends PageObject{
         }
     }
 
-    public void cargaFechaRelativa(){
 
+//    ida 25 diciembre 2020
+////    vuelta 20 enero 2021
+////    random = 12
+////    8 de diciembre
+
+    public void ParameterizedDates(String minDepartureDate, String maxDepartureDate, int minStay, int maxStay) throws ParseException {
+        int amountDays = new Random().nextInt((maxStay - minStay) + 1) + minStay;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date minDepDate = dateFormat.parse(minDepartureDate);
+        Date maxDepDate = dateFormat.parse(maxDepartureDate);
+        Calendar myCalendar = Calendar.getInstance();
+        myCalendar.setTime(maxDepDate);
+        myCalendar.add(Calendar.DAY_OF_MONTH,-amountDays);
+        Date minDate2 = myCalendar.getTime();
+        long diff = (minDate2.getTime()-minDepDate.getTime());
+        long diffInDays = diff / (24*60*60*1000);
+        int daysFromDeparture = new Random().nextInt((int) diffInDays + 1);
+        myCalendar.setTime(minDepDate);
+        myCalendar.add(Calendar.DAY_OF_MONTH,daysFromDeparture);
+        Date completeDateDep = myCalendar.getTime();
+        String yearMonthDayDep = dateFormat.format(completeDateDep);
+        String yearMonthDep = yearMonthDayDep.substring(0,7);
+        String dayDep = yearMonthDayDep.substring(8);
+        myCalendar.add(Calendar.DAY_OF_MONTH,amountDays);
+        Date completeDateArrival = myCalendar.getTime();
+        String yearMonthDayArrival = dateFormat.format(completeDateArrival);
+        String yearMonthArrival = yearMonthDayArrival.substring(0,7);
+        String dayArrival = yearMonthDayArrival.substring(8);
+        fechaIda.click();
+        goToSelectedMonth(yearMonthDep);
+        currentMonthDays.get(Integer.parseInt(dayDep)).click();
+        goToSelectedMonth(yearMonthArrival);
+        currentMonthDays.get(Integer.parseInt(dayArrival)).click();
+    }
+
+    public void cargaFechaRelativa(){
+        int dayNumber = (int)Math.floor(Math.random()*28)+1;
+        String currentDataMonth = activeMonth.getAttribute("data-month");
+        YearMonth currentYearMonth = YearMonth.parse(currentDataMonth);
+        YearMonth nextYearMonth = currentYearMonth.plusMonths(1);
+        //Busco el WebElement del mes siguiente y clickeo un dia random de ese mes
+        fechaIda.click();
+        todayDate.click();
+        driver.findElement(By.cssSelector("._dpmg2--show ._dpmg2--month[data-month='"+nextYearMonth+"'] ._dpmg2--available:nth-of-type("+dayNumber+")")).click();
     }
 
 
     public void cargaFecha(String anoMesIda, String diaIda, String anoMesVuelta, String diaVuelta){
         fechaIda.click();
+        goToSelectedMonth(anoMesIda);
+        currentMonthDays.get(Integer.parseInt(diaIda)).click();
+        goToSelectedMonth(anoMesVuelta);
+        currentMonthDays.get(Integer.parseInt(diaVuelta)).click();
+    }
+
+    public void goToSelectedMonth(String anoMes){
         String dataMonthActiveMonth = activeMonth.getAttribute("data-month");
-        while(!dataMonthActiveMonth.equals(anoMesIda)){
+        while(!dataMonthActiveMonth.equals(anoMes)){
             nextArrow.click();
             dataMonthActiveMonth = activeMonth.getAttribute("data-month");
         }
-        WebElement diaElegidoIda = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaIda + "')][contains(@class,'_dpmg2--date-number')]"));
-        diaElegidoIda.click();
-       // driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'" + diaVuelta + "')]")).click();
-
-        while(!dataMonthActiveMonth.equals(anoMesVuelta)){
-            nextArrow.click();
-           dataMonthActiveMonth = activeMonth.getAttribute("data-month");
-       }
-       WebElement diaElegidoVuelta = driver.findElement(By.xpath("//div[contains(@class, '_dpmg2--month-active')]//span[contains(text(),'"+ diaVuelta + "')][contains(@class,'_dpmg2--date-number')]"));
-        System.out.println(dataMonthActiveMonth);
-        System.out.println(diaElegidoVuelta.getText());
-       diaElegidoVuelta.click();
-        }
-
-    //estructura ._dpmg2--month-active ._dpmg2--dates
-    //formato YYYY-MM-DD          clase yearmonth;
+    }
 
     public void adultosMenores() throws InterruptedException {
         WebElement panel = driver.findElements(By.cssSelector("._pnlpk-panel-scroll")).get(2);

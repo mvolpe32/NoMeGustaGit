@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.YearMonth;
 
@@ -25,19 +26,24 @@ public class NewTest {
     }
 
     @Test
-    public void test1() throws InterruptedException {
-
+    public void test1() throws InterruptedException, ParseException {
 
         HomePage homePage = new HomePage(driver);
+        //SELECCIONO TAB
         FlightsHomePage flightsHome = (FlightsHomePage)homePage.header.selectTab("flights");
         //HotelsHomePage hotelsHome = (HotelsHomePage)homePage.header.selectTab("hotels");
-        flightsHome.searchForm.cargaCiudad("origen","Brasil","Brasilia, Distrito Federal, Brasil");
-        flightsHome.searchForm.cargaCiudad("destino","Londres","Londres, Inglaterra, Reino Unido");
+
+        //CARGO ORIGEN - DESTINO
+        //flightsHome.searchForm.cargaCiudad("origen","Brasil","Brasilia, Distrito Federal, Brasil");
+        //flightsHome.searchForm.cargaCiudad("destino","Londres","Londres, Inglaterra, Reino Unido");
 
         //FECHAS - CALENDARIO
-        flightsHome.searchForm.cargaFecha("2020-10","16","2020-11","20");
-        flightsHome.searchForm.adultosMenores();
-
+        //flightsHome.searchForm.cargaFecha("2020-10","16","2020-11","26");
+        //flightsHome.searchForm.cargaFechaRelativa();
+        flightsHome.searchForm.ParameterizedDates("2020-12-10","2020-12-30",10,18);
+        Thread.sleep(2000);
+        //CARGO ADULTOS - MENORES
+        //flightsHome.searchForm.adultosMenores();
     }
 
     @After
