@@ -4,10 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.WebDriverException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,13 +24,12 @@ public class FlightsSearchForm extends PageObject{
     }
     private String origenDestino;
 
-    //private static final searchBox;
     @FindBy(css = ".sbox-mobile-body .sbox-row .-mb4-s .sbox-input-container .sbox-3-validation .sbox-bind-reference-flight-roundtrip-origin-input")
     private WebElement ORIGEN;
     @FindBy(css = ".sbox-destination-container .input-container .input-tag")
     private WebElement DESTINO;
     @FindBy(css = ".sbox-dates-row .sbox-datein-container .sbox-bind-event-click-start-date")
-    private WebElement fechaIda;
+    private WebElement departureDate;
     @FindBy(css = "._dpmg2--month-active")
     private WebElement activeMonth;
     @FindBy (css = "._dpmg2--month-active ._dpmg2--date-number")
@@ -41,6 +38,28 @@ public class FlightsSearchForm extends PageObject{
     private WebElement todayDate;
     @FindBy(css = "._dpmg2--controls-next")
     private WebElement nextArrow;
+    @FindBy(css = ".sbox-3-input .input-container .-rooms")
+    private WebElement adultsMinorsBox;
+    @FindBy(css = "._pnlpk-panel--show")
+    private WebElement adultsMinorsPanel;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-stepper-adults .sbox-3-icon-minus")
+    private WebElement adultMinusArrow;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-stepper-adults .sbox-3-icon-plus")
+    private WebElement adultPlusArrow;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-stepper-minors .sbox-3-icon-minus")
+    private WebElement minorMinusArrow;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-stepper-minors .sbox-3-icon-plus")
+    private WebElement minorPlusArrow;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-minor-age-select ._pnlpk-select-minor-age")
+    private List<WebElement> allMinors;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-minor-age-select._pnlpk-minor-age-select-last-item")
+    private WebElement lastMinor;
+    @FindBy(css = "._pnlpk-select-flight-class-type")
+    private WebElement flightClass;
+    @FindBy(css = ".-ml3-l .sbox-search")
+    private WebElement flightSearchButton;
+    @FindBy(css = "._pnlpk-panel--show ._pnlpk-apply-button")
+    private WebElement adultsMinorsApplyButton;
 
 
 
@@ -50,7 +69,6 @@ public class FlightsSearchForm extends PageObject{
             ", Rio de Janeiro, Brasil", "Aeropuerto London Heathrow, Londres, Reino Unido", "Aeropuerto London Gatwick, Londres, Reino Unido"};
     String[] sugerencia = {"Brasil","Inglaterra","Buenos Aires"};
     String ciudadAeropuerto;
-
 
     public void cargaCiudad (String origenDestino, String ciudad, String ciudadLiteral) {
         //Ingreso sugerencia
@@ -73,13 +91,7 @@ public class FlightsSearchForm extends PageObject{
         }
     }
 
-
-//    ida 25 diciembre 2020
-////    vuelta 20 enero 2021
-////    random = 12
-////    8 de diciembre
-
-    public void ParameterizedDates(String minDepartureDate, String maxDepartureDate, int minStay, int maxStay) throws ParseException {
+    public void selectDateRange(String minDepartureDate, String maxDepartureDate, int minStay, int maxStay) throws ParseException {
         int amountDays = new Random().nextInt((maxStay - minStay) + 1) + minStay;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date minDepDate = dateFormat.parse(minDepartureDate);
@@ -87,8 +99,8 @@ public class FlightsSearchForm extends PageObject{
         Calendar myCalendar = Calendar.getInstance();
         myCalendar.setTime(maxDepDate);
         myCalendar.add(Calendar.DAY_OF_MONTH,-amountDays);
-        Date minDate2 = myCalendar.getTime();
-        long diff = (minDate2.getTime()-minDepDate.getTime());
+        Date minDateUBound = myCalendar.getTime();
+        long diff = (minDateUBound.getTime()-minDepDate.getTime());
         long diffInDays = diff / (24*60*60*1000);
         int daysFromDeparture = new Random().nextInt((int) diffInDays + 1);
         myCalendar.setTime(minDepDate);
@@ -102,7 +114,7 @@ public class FlightsSearchForm extends PageObject{
         String yearMonthDayArrival = dateFormat.format(completeDateArrival);
         String yearMonthArrival = yearMonthDayArrival.substring(0,7);
         String dayArrival = yearMonthDayArrival.substring(8);
-        fechaIda.click();
+        departureDate.click();
         goToSelectedMonth(yearMonthDep);
         currentMonthDays.get(Integer.parseInt(dayDep)).click();
         goToSelectedMonth(yearMonthArrival);
@@ -115,14 +127,14 @@ public class FlightsSearchForm extends PageObject{
         YearMonth currentYearMonth = YearMonth.parse(currentDataMonth);
         YearMonth nextYearMonth = currentYearMonth.plusMonths(1);
         //Busco el WebElement del mes siguiente y clickeo un dia random de ese mes
-        fechaIda.click();
+        departureDate.click();
         todayDate.click();
         driver.findElement(By.cssSelector("._dpmg2--show ._dpmg2--month[data-month='"+nextYearMonth+"'] ._dpmg2--available:nth-of-type("+dayNumber+")")).click();
     }
 
 
     public void cargaFecha(String anoMesIda, String diaIda, String anoMesVuelta, String diaVuelta){
-        fechaIda.click();
+        departureDate.click();
         goToSelectedMonth(anoMesIda);
         currentMonthDays.get(Integer.parseInt(diaIda)).click();
         goToSelectedMonth(anoMesVuelta);
@@ -137,11 +149,11 @@ public class FlightsSearchForm extends PageObject{
         }
     }
 
-    public void adultosMenores() throws InterruptedException {
+    public void selectAdultsMinors() throws InterruptedException {
         WebElement panel = driver.findElements(By.cssSelector("._pnlpk-panel-scroll")).get(2);
         //Despliego panel para agregar personas
         driver.findElements(By.cssSelector(".sbox-3-input .input-container .-rooms")).get(0).click();
-        WebDriverWait wait = new WebDriverWait(driver, 3);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         wait.until(ExpectedConditions.visibilityOf(panel));
         //Agrego 2 adultos
         //driver.findElements(By.cssSelector(("._pnlpk-minor-age-select").));
